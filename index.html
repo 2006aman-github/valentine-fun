@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <style>
+        body {
+            background-color: #000000; /* Deep dark red/black */
+            color: #d4af37; /* Gold */
+            font-family: 'Georgia', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .container {
+            border: 2px solid #d4af37;
+            padding: 50px;
+            border-radius: 15px;
+            background: rgba(76, 10, 88, 0.9);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        .heart {
+            color: #8b0000;
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            position: relative;
+            width: 360px;
+            height: 80px;
+            margin: 0 auto 10px;
+        }
+
+        .buttons button {
+            position: absolute;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 50px;
+            border: 2px solid #d4af37;
+            background: transparent;
+            color: #d4af37;
+            transition: left 0.25s ease, top 0.25s ease, background 0.2s ease, opacity 0.2s;
+        }
+
+        #yesBtn {
+            background: #d4af37;
+            color: #1a0205;
+            font-weight: bold;
+            left: 10px;
+            top: 10px;
+        }
+
+        #noBtn {
+            left: auto;
+            right: 10px;
+            top: 10px;
+        }
+          
+
+        /* Removed global hover swap; movement handled by JS */
+
+        
+
+        /* The hidden player */
+        #musicPlayer {
+            display: none;
+            margin-top: 20px;
+            animation: fadeIn 2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        audio {
+            filter: sepia(100%) saturate(200%) grayscale(100%) contrast(120%) invert(12%);
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="heart">❤</div>
+        <h1 id="question">Will you be my Valentine?</h1>
+        
+        <div class="buttons" id="btnGroup">
+            <button id="yesBtn" onclick="celebrate()">Yes</button>
+            <button id="noBtn" onclick="delayedTurnYes()" onmouseenter="moveNoRandom(event)">No</button>
+        </div>
+
+        <div id="musicPlayer">
+            <h2>Yay! I knew you'd say yes, liu</h2>
+            <p>Stay happy:</p>
+            <audio id="song" controls>
+                <source src="thankyou.aac" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+    </div>
+
+    <script>
+        function moveNoRandom(e) {
+            const noBtn = document.getElementById('noBtn');
+            if (noBtn.disabled) return;
+            const container = document.getElementById('btnGroup');
+            const cRect = container.getBoundingClientRect();
+            const bRect = noBtn.getBoundingClientRect();
+            const padding = 8;
+            const maxLeft = Math.max(0, cRect.width - bRect.width - padding);
+            const maxTop = Math.max(0, cRect.height - bRect.height - padding);
+            const randLeft = Math.floor(Math.random() * (maxLeft + 1));
+            const randTop = Math.floor(Math.random() * (maxTop + 1));
+            noBtn.style.left = randLeft + 'px';
+            noBtn.style.top = randTop + 'px';
+            noBtn.style.right = 'auto';
+        }
+
+        function delayedTurnYes() {
+            const noBtn = document.getElementById('noBtn');
+            // show a quick visual cue
+            noBtn.disabled = true;
+            noBtn.style.opacity = '0.7';
+            setTimeout(() => {
+                noBtn.innerText = "Very Yes!";
+                noBtn.style.backgroundColor = "#d4af37";
+                noBtn.style.color = "#1a0205";
+                noBtn.setAttribute("onclick", "celebrate()");
+                noBtn.style.opacity = '1';
+                noBtn.disabled = false;
+            }, 1000);
+        }
+
+        function celebrate() {
+            const audio = document.getElementById('song');
+            if (audio) audio.volume = 0.5;
+            document.getElementById('question').innerText = "It's a Yes!";
+            document.getElementById('btnGroup').style.display = 'none';
+            document.getElementById('musicPlayer').style.display = 'block';
+            
+        }
+
+        // set default audio volume to 50%
+        document.addEventListener('DOMContentLoaded', () => {
+            const audio = document.getElementById('song');
+            if (audio) audio.volume = 0.5;
+        });
+    </script>
+</body>
+</html>
